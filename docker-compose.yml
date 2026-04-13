@@ -1,0 +1,21 @@
+
+services:
+  superlanch-db:
+    image: mysql:8.0
+    container_name: superlanch
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: superlanchdb
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123456
+
+    ports:
+      - "3306:3306"
+
+    volumes:
+      - superlanch_data:/var/lib/mysql
+
+volumes:
+  superlanch_data:
