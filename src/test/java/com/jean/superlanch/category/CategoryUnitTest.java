@@ -16,8 +16,6 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryUnitTest {
-
-
     @Mock
     private CategoryRepository repository;
 
@@ -27,7 +25,6 @@ class CategoryUnitTest {
     void setUp(){
         victim = new CategoryService(repository);
     }
-
 
     @Test
     void shouldReturnCategoryWhenExists() {

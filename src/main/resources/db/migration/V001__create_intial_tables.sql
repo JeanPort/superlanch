@@ -10,7 +10,7 @@ CREATE TABLE product (
     name VARCHAR(150) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     category_id BIGINT NOT NULL,
-    allows_addons BOOLEAN NOT NULL DEFAULT FALSE,
+    addon_allowed BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_product_category

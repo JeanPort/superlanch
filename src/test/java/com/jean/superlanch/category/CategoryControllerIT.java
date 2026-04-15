@@ -4,6 +4,7 @@ import com.jean.superlanch.common.AbstractBaseIntegrationTest;
 import com.jean.superlanch.common.util.TestConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -11,13 +12,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CategoryControllerIT extends AbstractBaseIntegrationTest {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+class CategoryControllerIT extends AbstractBaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private CategoryRepository repository;
 
     @Test
     void shouldReturnAllCategories() throws Exception {
@@ -28,13 +28,11 @@ public class CategoryControllerIT extends AbstractBaseIntegrationTest {
 
     @Test
     void shouldReturnCategoryById() throws Exception {
-        var categoryToSave = new Category();
-        categoryToSave.setName(TestConstants.DEFAULT_CATEGORY_NAME);
-        categoryToSave = repository.save(categoryToSave);
+        var categoryId = TestConstants.DEFAULT_CATEGORY_ID;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/{categoryId}", categoryToSave.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/{categoryId}", categoryId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.id").value(categoryId));
     }
 
     @Test

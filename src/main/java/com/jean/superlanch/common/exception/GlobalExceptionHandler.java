@@ -14,9 +14,9 @@ public class GlobalExceptionHandler {
         return e.getLocalizedMessage();
     }
 
-    @ExceptionHandler(BusinesException.class)
+    @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String businesException(BusinesException e){
+    public String businesException(BusinessException e){
         return e.getLocalizedMessage();
     }
 }
