@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceUnitTest {
@@ -98,6 +99,66 @@ class ProductServiceUnitTest {
         Assertions.assertThrows(BusinessException.class,
                 () -> victim.create(request));
 
+
         Mockito.verify(repository, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
+    void shouldReturnProductWhenIdExists() {
+        Long id = TestConstants.DEFAULT_PRODUCT_ID;
+        Product product = TestDataCreator.createProduct();
+
+        Mockito.when(repository.findById(id))
+                .thenReturn(Optional.of(product));
+
+        Product result = victim.findByIdOrThrow(id);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(product.getName(), result.getName());
+        Mockito.verify(repository).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenProductNotFound() {
+        Long id = TestConstants.DEFAULT_PRODUCT_ID_INVALID;
+
+        Mockito.when(repository.findById(id))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThrows(
+                ProductNotFoundException.class,
+                () -> victim.findByIdOrThrow(id)
+        );
+        Mockito.verify(repository).findById(id);
+    }
+
+    @Test
+    void shouldReturnProductFullResponseWhenProductExists() {
+        Long id = TestConstants.DEFAULT_PRODUCT_ID;
+        var product = TestDataCreator.createProduct();
+
+        Mockito.when(repository.findByIdWithCategory(id))
+                .thenReturn(Optional.of(product));
+
+        ProductFullResponse response = victim.getProductDetails(id);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(product.getName(), response.name());
+        Assertions.assertEquals(product.getCategory().getName(), response.categoryName());
+        Mockito.verify(repository).findByIdWithCategory(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenProductDetailsNotFound() {
+        Long id = TestConstants.DEFAULT_PRODUCT_ID_INVALID;
+
+        Mockito.when(repository.findByIdWithCategory(id))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThrows(
+                ProductNotFoundException.class,
+                () -> victim.getProductDetails(id)
+        );
+        Mockito.verify(repository).findByIdWithCategory(id);
     }
 }

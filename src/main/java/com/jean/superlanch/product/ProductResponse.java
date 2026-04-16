@@ -8,7 +8,7 @@ public record ProductResponse(
         BigDecimal price
 ) {
 
-    public static ProductResponse from(Product product){
+    public static ProductResponse toProductResponse(Product product){
         return new ProductResponse(
                 product.getId(),
                 product.getName(),

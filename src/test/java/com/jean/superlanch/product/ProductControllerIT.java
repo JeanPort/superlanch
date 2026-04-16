@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,5 +84,23 @@ class ProductControllerIT extends AbstractBaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnProductDetailsWithCategory() throws Exception {
+
+        var productId = TestConstants.DEFAULT_PRODUCT_ID;
+
+        mockMvc.perform(get("/products/{productId}", productId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(productId));
+    }
+
+    @Test
+    void shouldReturn404WhenIdNotValidNotFound() throws Exception {
+        var productId = TestConstants.DEFAULT_PRODUCT_ID_INVALID;
+
+        mockMvc.perform(get("/products/{productId}", productId))
+                .andExpect(status().isNotFound());
     }
 }

@@ -19,4 +19,9 @@ public class ProductController {
     public ProductResponse create(@RequestBody @Valid CreateProductRequest request){
         return service.create(request);
     }
+
+    @GetMapping("/{productId}")
+    public ProductFullResponse findById(@PathVariable Long productId){
+        return service.getProductDetails(productId);
+    }
 }
