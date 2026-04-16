@@ -1,6 +1,8 @@
 package com.jean.superlanch.product;
 
 import com.jean.superlanch.category.CategoryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,5 +34,13 @@ public class ProductService {
     public ProductFullResponse getProductDetails(Long id){
         var product = repository.findByIdWithCategory(id).orElseThrow(ProductNotFoundException::new);
         return ProductFullResponse.toProductFullResponse(product);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> listAll(ProductFilter filter, Pageable pageable){
+
+        var spec = ProductSpecification.withFilter(filter);
+        return repository.findAll(spec, pageable)
+                .map(ProductResponse::toProductResponse);
     }
 }
