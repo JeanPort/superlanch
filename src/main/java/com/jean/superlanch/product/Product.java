@@ -37,6 +37,41 @@ public class Product {
     }
 
     public static Product create(String name, BigDecimal price, Category category, boolean addonAllowed) {
+        validate(name, price, category);
+
+        Product product = new Product();
+        product.name = name;
+        product.price = price;
+        product.category = category;
+        product.addonAllowed = addonAllowed;
+
+        return product;
+    }
+
+    public void update(String name, BigDecimal price, Category category){
+        validate(name, price, category);
+        this.name = name;
+        this.price = price;
+        this.category = category;
+
+    }
+
+    public void allowAddons(){
+        addonAllowed = true;
+    }
+
+    public void disAllowAddons(){
+        addonAllowed = false;
+    }
+
+    public void changePrice(BigDecimal newPrice) {
+        if (newPrice == null || newPrice.signum() <= 0) {
+            throw new BusinessException("Preço inválido");
+        }
+        this.price = newPrice;
+    }
+
+    private static void validate(String name, BigDecimal price, Category category) {
         if (name == null || name.isBlank()) {
             throw new BusinessException("Nome é obrigatório");
         }
@@ -48,20 +83,5 @@ public class Product {
         if (category == null) {
             throw new BusinessException("Categoria obrigatória");
         }
-
-        Product product = new Product();
-        product.name = name;
-        product.price = price;
-        product.category = category;
-        product.addonAllowed = addonAllowed;
-
-        return product;
-    }
-
-    public void changePrice(BigDecimal newPrice) {
-        if (newPrice == null || newPrice.signum() <= 0) {
-            throw new BusinessException("Preço inválido");
-        }
-        this.price = newPrice;
     }
 }

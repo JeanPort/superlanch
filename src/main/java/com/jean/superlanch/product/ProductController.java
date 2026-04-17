@@ -31,4 +31,9 @@ public class ProductController {
     public Page<ProductResponse> listAll(ProductFilter filter, Pageable pageable){
         return service.listAll(filter, pageable);
     }
+
+    @PutMapping("/{productId}")
+    public ProductResponse update(@PathVariable Long productId, @RequestBody @Valid UpdateProductRequest request){
+        return service.update(productId, request);
+    }
 }

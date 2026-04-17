@@ -12,13 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -167,4 +162,64 @@ class ProductServiceUnitTest {
         Mockito.verify(repository).findByIdWithCategory(id);
     }
 
+    @Test
+    void shouldUpdateProductSuccessfully() {
+        var productId = TestConstants.DEFAULT_PRODUCT_ID;
+        var product = TestDataCreator.createProduct();
+        var category = product.getCategory();
+        var request = TestDataCreator.createUpdateProductRequest();
+
+        Mockito.when(repository.findById(productId))
+                .thenReturn(Optional.of(product));
+
+        Mockito.when(categoryService.findByIdOrThrow(request.categoryId()))
+                .thenReturn(category);
+
+        ProductResponse response = victim.update(productId, request);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(request.name(), response.name());
+        Assertions.assertEquals(request.price(), response.price());
+
+        Mockito.verify(repository).findById(productId);
+        Mockito.verify(categoryService).findByIdOrThrow(request.categoryId());
+    }
+
+    @Test
+     void updateShouldThrowExceptionWhenProductNotFound() {
+        var productId = TestConstants.DEFAULT_PRODUCT_ID_INVALID;
+        var request = TestDataCreator.createUpdateProductRequest();
+
+        Mockito.when(repository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThrows(
+                ProductNotFoundException.class,
+                () -> victim.update(productId, request)
+        );
+
+        Mockito.verify(repository).findById(productId);
+        Mockito.verifyNoInteractions(categoryService);
+    }
+
+    @Test
+    void updateShouldThrowExceptionWhenCategoryNotFound() {
+        var productId = TestConstants.DEFAULT_PRODUCT_ID;
+        var product = TestDataCreator.createProduct();
+        var request = TestDataCreator.createUpdateProductRequest();
+
+        Mockito.when(repository.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(product));
+
+        Mockito.when(categoryService.findByIdOrThrow(Mockito.anyLong()))
+                .thenThrow(new CategoryNotFoundException());
+
+        Assertions.assertThrows(
+                CategoryNotFoundException.class,
+                () -> victim.update(productId, request)
+        );
+
+        Mockito.verify(repository).findById(productId);
+        Mockito.verify(categoryService).findByIdOrThrow(1L);
+    }
 }

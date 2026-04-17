@@ -25,7 +25,7 @@ public class ProductService {
         return ProductResponse.toProductResponse(product);
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public Product findByIdOrThrow(Long id){
         return repository.findById(id).orElseThrow(ProductNotFoundException::new);
     }
@@ -42,5 +42,12 @@ public class ProductService {
         var spec = ProductSpecification.withFilter(filter);
         return repository.findAll(spec, pageable)
                 .map(ProductResponse::toProductResponse);
+    }
+
+    public ProductResponse update(Long productId, UpdateProductRequest request){
+        var product = findByIdOrThrow(productId);
+        var category = categoryService.findByIdOrThrow(request.categoryId());
+        product.update(request.name(), request.price(), category);
+        return ProductResponse.toProductResponse(product);
     }
 }
