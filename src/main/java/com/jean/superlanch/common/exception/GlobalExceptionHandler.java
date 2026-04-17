@@ -19,4 +19,10 @@ public class GlobalExceptionHandler {
     public String businesException(BusinessException e){
         return e.getLocalizedMessage();
     }
+
+    @ExceptionHandler(NameAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String nameAlreadyExistsException(NameAlreadyExistsException e) {
+        return e.getLocalizedMessage();
+    }
 }

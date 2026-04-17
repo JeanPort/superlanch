@@ -19,6 +19,10 @@ public final class TestConstants {
     public static final String UPDATE_PRODUCT_NAME = "update name";
     public static final BigDecimal UPDATE_PRODUCT_PRICE = BigDecimal.TEN;
 
+    public static final String DEFAULT_ADDON_NAME = "ADDON TEST";
+    public static final BigDecimal DEFAULT_ADDON_PRICE = BigDecimal.TEN;
+
+
     private TestConstants() {
     }
 }

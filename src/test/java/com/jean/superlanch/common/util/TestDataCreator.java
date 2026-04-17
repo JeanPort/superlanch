@@ -1,5 +1,7 @@
 package com.jean.superlanch.common.util;
 
+import com.jean.superlanch.addon.Addon;
+import com.jean.superlanch.addon.CreateAddonRequest;
 import com.jean.superlanch.category.Category;
 import com.jean.superlanch.product.CreateProductRequest;
 import com.jean.superlanch.product.Product;
@@ -36,6 +38,14 @@ public final class TestDataCreator {
                 TestConstants.UPDATE_PRODUCT_NAME,
                 TestConstants.UPDATE_PRODUCT_PRICE,
                 TestConstants.DEFAULT_CATEGORY_ID);
+    }
+
+    public static CreateAddonRequest createAddonRequest(){
+        return new CreateAddonRequest(TestConstants.DEFAULT_ADDON_NAME, TestConstants.DEFAULT_ADDON_PRICE);
+    }
+
+    public static Addon createAddon(){
+        return Addon.create(TestConstants.DEFAULT_ADDON_NAME, TestConstants.DEFAULT_ADDON_PRICE);
     }
 
     private TestDataCreator() {
